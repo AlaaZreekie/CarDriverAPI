@@ -32,10 +32,10 @@ public class CarServices(/*UserManager<IdentityUser> userManeger,*/ IRepository<
         {
             CarDTO carDTO = new();
             carDTO.Id = c.Id;
-            carDTO.doorsNum = c.NumberOfDoors;
-            carDTO.color = c.CarColor;
-            carDTO.type = c.CarType;
-            carDTO.drivers = [];
+            carDTO.DoorsNum = c.NumberOfDoors;
+            carDTO.Color = c.CarColor;
+            carDTO.Type = c.CarType;
+            carDTO.Drivers = [];
             if (c.Leas.Count == 0 || c.Leas == null)
             {
                 carsList.Add(carDTO);
@@ -44,7 +44,7 @@ public class CarServices(/*UserManager<IdentityUser> userManeger,*/ IRepository<
             {
                 foreach (CarsDrivers cd in c.Leas)
                 {                    
-                    carDTO.drivers.Add(cd.driverId);
+                    carDTO.Drivers.Add(cd.driverId);
                 }            
                 carsList.Add(carDTO);
             }                
@@ -57,7 +57,7 @@ public class CarServices(/*UserManager<IdentityUser> userManeger,*/ IRepository<
         Car car = _carRepository.GetById(id, c => c.Leas);
         if (car == null) { return null; }
         if(car.Leas == null || car.Leas.Count() == 0) { return carDTO; }
-        carDTO = new() { Id = car.Id, color = car.CarColor, type = car.CarType, doorsNum = car.NumberOfDoors, drivers = [] };
+        carDTO = new() { Id = car.Id, Color = car.CarColor, Type = car.CarType, DoorsNum = car.NumberOfDoors, Drivers = [] };
 
 
         foreach (CarsDrivers c in car.Leas)
@@ -65,7 +65,7 @@ public class CarServices(/*UserManager<IdentityUser> userManeger,*/ IRepository<
             Driver d = new Driver();
             //Driver d = _driverRepository.GetById(id);            
             d = _driverRepository.GetById(c.driverId);            
-            carDTO.drivers.Add(c.driverId);
+            carDTO.Drivers.Add(c.driverId);
         }
         return carDTO;
     }
@@ -86,9 +86,9 @@ public class CarServices(/*UserManager<IdentityUser> userManeger,*/ IRepository<
             car.NumberOfDoors = numDoor;
             car = _carRepository.Update(car);           
             carDTO.Id = car.Id;
-            carDTO.type = car.CarType;
-            carDTO.doorsNum = car.NumberOfDoors;
-            carDTO.color = car.CarColor;
+            carDTO.Type = car.CarType;
+            carDTO.DoorsNum = car.NumberOfDoors;
+            carDTO.Color = car.CarColor;
             return carDTO;
         }
         
@@ -100,7 +100,7 @@ public class CarServices(/*UserManager<IdentityUser> userManeger,*/ IRepository<
         if (car != null)
         {
 
-            CarDTO carDTO = new() { doorsNum = car.NumberOfDoors, Id = car.Id, type = car.CarType };
+            CarDTO carDTO = new() { DoorsNum = car.NumberOfDoors, Id = car.Id, Type = car.CarType };
 
             _carRepository.Delete(car );
             
@@ -121,7 +121,7 @@ public class CarServices(/*UserManager<IdentityUser> userManeger,*/ IRepository<
          car.CarType = type;
          car.NumberOfDoors = numDoor;
         car = _carRepository.Create(car);
-        CarDTO carDTO = new() { Id =  car.Id,color= car.CarColor,type = car.CarType,doorsNum= car.NumberOfDoors};
+        CarDTO carDTO = new() { Id =  car.Id,Color= car.CarColor,Type = car.CarType,DoorsNum= car.NumberOfDoors};
         return carDTO;
     }
 

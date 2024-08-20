@@ -27,13 +27,13 @@ public class CarDriverServices(ICarServices carService,IRepository<Car> carRepos
         if(car == null  ||  driver == null) { return null; }
         else
         {
-            CarsDrivers carDriver = new CarsDrivers() {carId = car.Id,driverId = driver.Id };
+            CarsDrivers carDriver = new() {carId = car.Id,driverId = driver.Id };
             carDriver = _carsDriversRepository.Create(carDriver);
             LeasDTO leas = new LeasDTO();
-            leas.carName = carDriver.car.CarType;
-            leas.driverName = carDriver.driver.Name;
-            leas.carId = carDriver.carId;
-            leas.driverId = carDriver.driverId;
+            leas.CarName = carDriver.car.CarType;
+            leas.DriverName = carDriver.driver.Name;
+            leas.CarId = carDriver.carId;
+            leas.DriverId = carDriver.driverId;
 
             return leas;
         }
@@ -47,8 +47,8 @@ public class CarDriverServices(ICarServices carService,IRepository<Car> carRepos
         CarDTO carDTO = _carService.GetById(carId);
         if (carDTO == null) { return null; }
 
-        if (carDTO.drivers.Count() == 0 || carDTO.drivers == null) { return null; }
-        foreach (int n in carDTO.drivers)
+        if (carDTO.Drivers.Count() == 0 || carDTO.Drivers == null) { return null; }
+        foreach (int n in carDTO.Drivers)
         {
             var driver = _driverRepository.GetById(n);
             Pair p = new Pair();
@@ -66,10 +66,10 @@ public class CarDriverServices(ICarServices carService,IRepository<Car> carRepos
         for(int i = 0;i< carsDrivers.Count();i++)
         {
             LeasDTO l = new LeasDTO();
-            l.carName = carsDrivers[i].car.CarType;
-            l.driverName = carsDrivers[i].driver.Name;
-            l.carId = carsDrivers[i].carId;
-            l.driverId = carsDrivers[i].driverId;
+            l.CarName = carsDrivers[i].car.CarType;
+            l.DriverName = carsDrivers[i].driver.Name;
+            l.CarId = carsDrivers[i].carId;
+            l.DriverId = carsDrivers[i].driverId;
             leas.Add(l);
         }
 

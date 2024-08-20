@@ -8,11 +8,11 @@ namespace Core.DTO
 {
     public class LeasDTO
     {
-        public int carId {  get; set; }
-        public string carName { get; set; }
+        public int CarId {  get; set; }
+        public string? CarName { get; set; }
 
-        public int driverId {  get; set; }
+        public int DriverId {  get; set; }
         
-        public string driverName { get; set; }
+        public string? DriverName { get; set; }
     }
 }
