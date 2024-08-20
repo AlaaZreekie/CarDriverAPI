@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.DTO;
-
-public class DriverDTO
+namespace Core.DTO
 {
-    public string Name { get; set; }
-    public int id { get; set; }
-    public List<int> cars { get; set; } = [];
-    public DriverDTO() { }
+    public class DriverDTO
+    {
+        public string Name { get; set; }
+        public int id { get; set; }
+        public List<int> cars { get; set; } = [];
+        public DriverDTO() { }
 
 
+    }
 }
