@@ -26,7 +26,8 @@ public class DriverController(ICarDriverServices carDriverServices, IDriverServi
     [HttpGet]
     public IActionResult GetAllDrivers()
     {
-        var List = _driverServices.GetAllDrivers().ToList();
+        var List = _driverServices.GetAllDrivers()
+                                  .ToList();
         return List == null || List.Count == 0 ? BadRequest("There is no drivers") : Ok(List);
     }
     [HttpPost, Authorize]

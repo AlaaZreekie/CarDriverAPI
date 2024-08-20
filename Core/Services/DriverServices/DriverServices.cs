@@ -45,7 +45,7 @@ public class DriverServices(IRepository<Driver> driverRepository, IRepository<Ca
     }
     public DriverDTO? GetById(int id)
     {
-        Driver driver = _driverRepository.GetById(id, c => c.Leas);
+        var driver = _driverRepository.GetById(id, c => c.Leas);
         if (driver == null) {  return null; }
         DriverDTO driverDTO = new();
         if (driver.Leas == null || driver.Leas.Count() == 0) { return driverDTO; }
@@ -58,9 +58,9 @@ public class DriverServices(IRepository<Driver> driverRepository, IRepository<Ca
         return driverDTO;
     }
 
-    public DriverDTO UpdateDriver(int id,string name)
+    public DriverDTO? UpdateDriver(int id,string name)
     {
-        Driver driver = _driverRepository.GetById(id);
+        var driver = _driverRepository.GetById(id);
 
         if (driver == null)
         {
@@ -68,21 +68,22 @@ public class DriverServices(IRepository<Driver> driverRepository, IRepository<Ca
         }
         else
         {
-            DriverDTO driverDTO = GetById(id);
+            var driverDTO = GetById(id);
             driver.Id = id;
             driver.Name = name;            
             driver = _driverRepository.Update(driver);
-            driverDTO.Id = driver.Id;
-            driverDTO.Name = driver.Name;
-            
+            driverDTO = new DriverDTO();
+            if(driver ==  null) { return null; }
+            driverDTO.Id = driver.Id;            
+            driverDTO.Name = driver.Name;            
             return driverDTO;
         }
 
     }
 
-    public DriverDTO DeleteDriver(int id)
+    public DriverDTO? DeleteDriver(int id)
     {
-        Driver driver = _driverRepository.GetById(id);
+        var driver = _driverRepository.GetById(id);
         if (driver != null)
         {
 
@@ -102,10 +103,11 @@ public class DriverServices(IRepository<Driver> driverRepository, IRepository<Ca
 
     public DriverDTO CreateDriver(string? name)
     {
-        Driver driver = new Driver();
+        var driver = new Driver();
         driver.Name = name;
 
         driver = _driverRepository.Create(driver);
+        if (driver == null) { throw new Exception("ERROR CREATING"); }
         DriverDTO driverDTO = new() { Id = driver.Id, Name = driver.Name };
         return driverDTO;
     }
