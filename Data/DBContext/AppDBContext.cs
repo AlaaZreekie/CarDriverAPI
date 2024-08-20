@@ -21,15 +21,19 @@ public class ApplicationDBContext : IdentityDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Car>().Property(c => c.Id).ValueGeneratedOnAdd();
-        modelBuilder.Entity<Car>().HasKey(c => c.Id);
+        modelBuilder.Entity<Car>(c =>
+        {
+            c.Property(c => c.Id).ValueGeneratedOnAdd();
+            c.HasKey(c => c.Id);
+        });
 
         modelBuilder.Entity<Driver>().Property(d => d.Id).ValueGeneratedOnAdd();
         modelBuilder.Entity<Driver>().HasKey(d => d.Id);
 
-        modelBuilder.Entity<Leas>().Property(d => d.Id).ValueGeneratedOnAdd();
         modelBuilder.Entity<Leas>(t =>
         {
+            t.ToTable("Lease");
+            t.Property(d => d.Id).ValueGeneratedOnAdd();
             t.HasKey(cd => new { cd.CarId, cd.DriverId });
 
             t.HasOne(c => c.Car)
@@ -40,8 +44,10 @@ public class ApplicationDBContext : IdentityDbContext
              .WithMany(cd => cd.Leas)
              .HasForeignKey(id => id.DriverId);
 
+            // TODO: Alaa, Add time interval here
 
         });
+
         base.OnModelCreating(modelBuilder);
     }
 
