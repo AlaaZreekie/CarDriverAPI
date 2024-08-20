@@ -20,15 +20,35 @@ using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Description = "Bearer Authentication with JWT Token",
+        Type = SecuritySchemeType.Http
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                {
+                    new OpenApiSecurityScheme {
+                        Reference = new OpenApiReference {
+                            Id = "Bearer",
+                                Type = ReferenceType.SecurityScheme
+                        }
+                    },
+                    new List < string > ()
+                }
+            });
+    /*options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
     {
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
         Name = "Authorization",
         Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
-    });
+    });*/
 
 
-    options.OperationFilter<SecurityRequirementsOperationFilter>();
+    /*options.OperationFilter<SecurityRequirementsOperationFilter>();*/
 });
 builder.Services.AddControllers();
 
@@ -41,12 +61,6 @@ builder.Services.AddScoped<IRepository<Car>,Repository<Car>>();
 builder.Services.AddScoped<IRepository<Driver>, Repository<Driver>>();
 builder.Services.AddScoped<IRepository<Leas>, Repository<Leas>>();
 
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-});
 
 builder.Services.AddControllers()
         .AddJsonOptions(options =>

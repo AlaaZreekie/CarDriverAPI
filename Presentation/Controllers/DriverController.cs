@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Core.Services.CarDriverServices;
 using Core.DTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 
@@ -29,7 +30,7 @@ public class DriverController(ICarDriverServices carDriverServices, IDriverServi
         var List = _driverServices.GetAllDrivers();
         return List == null || List.Count == 0 ? BadRequest("There is no drivers") : Ok(List);
     }
-    [HttpPost, Authorize]    
+    [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]    
     public IActionResult CreateDriver([FromForm] string name)
     {
         var res = _driverServices.CreateDriver(name);
