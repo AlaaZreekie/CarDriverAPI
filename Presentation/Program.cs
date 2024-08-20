@@ -19,7 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("oath2", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
         Name = "Authorization",
@@ -37,7 +37,7 @@ builder.Services.AddScoped<UserServices>();
 
 builder.Services.AddScoped<IRepository<Car>,Repository<Car>>();
 builder.Services.AddScoped<IRepository<Driver>, Repository<Driver>>();
-builder.Services.AddScoped<IRepository<CarsDrivers>, Repository<CarsDrivers>>();
+builder.Services.AddScoped<IRepository<Leas>, Repository<Leas>>();
 
 
 builder.Services.AddAuthentication(options =>

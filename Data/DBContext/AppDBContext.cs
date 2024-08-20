@@ -17,7 +17,7 @@ public class ApplicationDBContext : IdentityDbContext
     public DbSet<Car> Cars { get; set; }
     public DbSet<Driver> Drivers { get; set; }
 
-    public DbSet<CarsDrivers> CarsDrivers { get; set; }
+    public DbSet<Leas> CarsDrivers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,18 +27,18 @@ public class ApplicationDBContext : IdentityDbContext
         modelBuilder.Entity<Driver>().Property(d => d.Id).ValueGeneratedOnAdd();
         modelBuilder.Entity<Driver>().HasKey(d => d.Id);
 
-        modelBuilder.Entity<CarsDrivers>().Property(d => d.Id).ValueGeneratedOnAdd();
-        modelBuilder.Entity<CarsDrivers>(t =>
+        modelBuilder.Entity<Leas>().Property(d => d.Id).ValueGeneratedOnAdd();
+        modelBuilder.Entity<Leas>(t =>
         {
-            t.HasKey(cd => new { cd.carId, cd.driverId });
+            t.HasKey(cd => new { cd.CarId, cd.DriverId });
 
-            t.HasOne(c => c.car)
+            t.HasOne(c => c.Car)
              .WithMany(cd => cd.Leas)
-             .HasForeignKey(ic => ic.carId);
+             .HasForeignKey(ic => ic.CarId);
 
-            t.HasOne(d => d.driver)
+            t.HasOne(d => d.Driver)
              .WithMany(cd => cd.Leas)
-             .HasForeignKey(id => id.driverId);
+             .HasForeignKey(id => id.DriverId);
 
 
         });

@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Core.Services.DriverServices;
 
-public class DriverServices(IRepository<Driver> driverRepository, IRepository<Car> carRepository, IRepository<CarsDrivers> repository) : IDriverServices
+public class DriverServices(IRepository<Driver> driverRepository, IRepository<Car> carRepository, IRepository<Leas> repository) : IDriverServices
 {
 
     private readonly IRepository<Car> _carRepository = carRepository;
     private readonly IRepository<Driver> _driverRepository = driverRepository;
-    private readonly IRepository<CarsDrivers> _repository = repository;
+    private readonly IRepository<Leas> _repository = repository;
 
 
     public List<DriverDTO>? GetAllDrivers()
@@ -30,13 +30,13 @@ public class DriverServices(IRepository<Driver> driverRepository, IRepository<Ca
         foreach (Driver d in drivers)
         {
             DriverDTO driverDTO = new();
-            driverDTO.id = d.Id;
+            driverDTO.Id = d.Id;
             driverDTO.Name = d.Name;
-            driverDTO.cars = [];
+            driverDTO.Cars = [];
 
-            foreach (CarsDrivers cd in d.Leas)
+            foreach (Leas cd in d.Leas)
             {
-                driverDTO.cars.Add(cd.carId);
+                driverDTO.Cars.Add(cd.CarId);
             }
 
             driverList.Add(driverDTO);
@@ -49,11 +49,11 @@ public class DriverServices(IRepository<Driver> driverRepository, IRepository<Ca
         if (driver == null) {  return null; }
         DriverDTO driverDTO = new();
         if (driver.Leas == null || driver.Leas.Count() == 0) { return driverDTO; }
-         driverDTO = new() { id = driver.Id, Name = driver.Name, cars = [] };
+         driverDTO = new() { Id = driver.Id, Name = driver.Name, Cars = [] };
 
-        foreach (CarsDrivers d in driver.Leas)
+        foreach (Leas d in driver.Leas)
         {                       
-            driverDTO.cars.Add(d.carId);
+            driverDTO.Cars.Add(d.CarId);
         }
         return driverDTO;
     }
@@ -72,7 +72,7 @@ public class DriverServices(IRepository<Driver> driverRepository, IRepository<Ca
             driver.Id = id;
             driver.Name = name;            
             driver = _driverRepository.Update(driver);
-            driverDTO.id = driver.Id;
+            driverDTO.Id = driver.Id;
             driverDTO.Name = driver.Name;
             
             return driverDTO;
@@ -86,7 +86,7 @@ public class DriverServices(IRepository<Driver> driverRepository, IRepository<Ca
         if (driver != null)
         {
 
-            DriverDTO driverDTO = new() { id = driver.Id, Name = driver.Name };
+            DriverDTO driverDTO = new() { Id = driver.Id, Name = driver.Name };
 
             _driverRepository.Delete(driver);
 
@@ -106,7 +106,7 @@ public class DriverServices(IRepository<Driver> driverRepository, IRepository<Ca
         driver.Name = name;
 
         driver = _driverRepository.Create(driver);
-        DriverDTO driverDTO = new() { id = driver.Id, Name = driver.Name };
+        DriverDTO driverDTO = new() { Id = driver.Id, Name = driver.Name };
         return driverDTO;
     }
 }

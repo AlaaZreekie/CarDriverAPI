@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Core.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
-namespace Presentation.Properties.Controllers;
+namespace Presentation.Controllers;
 
 [ApiController]
 [Route("api/[controller]/[action]")]
@@ -16,6 +15,6 @@ public class LeasController(ICarDriverServices services) : ControllerBase
     {
         //return Ok("done");
         var List = _services.GetAllCarsWithDrivers().ToList();
-        return (List == null || List.Count() == 0) ? BadRequest("There is no Leas") : Ok(List);
+        return List == null || List.Count() == 0 ? BadRequest("There is no Leas") : Ok(List);
     }
 }

@@ -10,15 +10,15 @@ using Core.Services.DriverServices;
 
 namespace Core.Services.CarDriverServices;
 
-public class CarDriverServices(ICarServices carService,IRepository<Car> carRepository, IRepository<Driver> driverRepository, IRepository<CarsDrivers> repository) : ICarDriverServices
+public class CarDriverServices(ICarServices carService,IRepository<Car> carRepository, IRepository<Driver> driverRepository, IRepository<Leas> repository) : ICarDriverServices
 {
     private readonly ICarServices _carService = carService;
     private readonly IRepository<Car> _carRepository = carRepository;
     private readonly IRepository<Driver> _driverRepository = driverRepository;
     //private readonly IRepository<CarsDrivers> _carRepository = repository;
 
-    private readonly IRepository<CarsDrivers> _carsDriversRepository = repository;
-    public LeasDTO AddDriverToCar(int carId, int driverId)
+    private readonly IRepository<Leas> _carsDriversRepository = repository;
+    public LeasDTO? AddDriverToCar(int carId, int driverId)
     {
         var car = new Car();
         car = _carRepository.GetById(carId);
@@ -27,33 +27,37 @@ public class CarDriverServices(ICarServices carService,IRepository<Car> carRepos
         if(car == null  ||  driver == null) { return null; }
         else
         {
-            CarsDrivers carDriver = new CarsDrivers() {carId = car.Id,driverId = driver.Id };
-            carDriver = _carsDriversRepository.Create(carDriver);
+            Leas carDriver = new() {CarId = car.Id,DriverId = driver.Id };
+            var rescarDriver = _carsDriversRepository.Create(carDriver);
             LeasDTO leas = new LeasDTO();
-            leas.carName = carDriver.car.CarType;
-            leas.driverName = carDriver.driver.Name;
-            leas.carId = carDriver.carId;
-            leas.driverId = carDriver.driverId;
+            if(rescarDriver == null) { return null; }
+            leas.CarName = rescarDriver.Car.CarType;
+            leas.DriverName = rescarDriver.Driver.Name;
+            leas.CarId = rescarDriver.CarId;
+            leas.DriverId = rescarDriver.DriverId;
 
             return leas;
         }
        
     }
     
-    public List<Pair> GetById(int carId)
+    public List<Pair>? GetById(int carId)
     {
         var Drivers = new List<Pair>();
         //var leas = _carsDriversRepository.GetAll();
-        CarDTO carDTO = _carService.GetById(carId);
+        var carDTO = _carService.GetById(carId);
         if (carDTO == null) { return null; }
 
-        if (carDTO.drivers.Count() == 0 || carDTO.drivers == null) { return null; }
-        foreach (int n in carDTO.drivers)
+        if (carDTO.Drivers.Count() == 0 || carDTO.Drivers == null) { return null; }
+        foreach (int n in carDTO.Drivers)
         {
             var driver = _driverRepository.GetById(n);
-            Pair p = new Pair();
-            p.Id = driver.Id;
-            p.Name = driver.Name;
+            if (driver == null) { continue; }
+            var p = new Pair
+            {
+                Id = driver.Id,
+                Name = driver.Name
+            };
             Drivers.Add(p);
         }
         return Drivers;       
@@ -61,15 +65,19 @@ public class CarDriverServices(ICarServices carService,IRepository<Car> carRepos
 
     public List<LeasDTO> GetAllCarsWithDrivers()
     {
-        List<CarsDrivers> carsDrivers = _carsDriversRepository.GetAll(c => c.car, d => d.driver).ToList();
-        List<LeasDTO> leas = new List<LeasDTO>();
-        for(int i = 0;i< carsDrivers.Count();i++)
+        List<Leas> carsDrivers = [.. _carsDriversRepository.GetAll(c => c.Car, d => d.Driver)];
+        List<LeasDTO> leas = [];
+        if(carsDrivers == null) { return leas; }
+
+        for(int i = 0;i< carsDrivers.Count; i++)
         {
-            LeasDTO l = new LeasDTO();
-            l.carName = carsDrivers[i].car.CarType;
-            l.driverName = carsDrivers[i].driver.Name;
-            l.carId = carsDrivers[i].carId;
-            l.driverId = carsDrivers[i].driverId;
+            LeasDTO l = new()
+            {
+                CarName = carsDrivers[i].Car.CarType,
+                DriverName = carsDrivers[i].Driver.Name,
+                CarId = carsDrivers[i].CarId,
+                DriverId = carsDrivers[i].DriverId
+            };
             leas.Add(l);
         }
 

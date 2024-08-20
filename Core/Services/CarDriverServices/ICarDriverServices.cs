@@ -10,9 +10,9 @@ namespace Core.Services.CarDriverServices
 {
     public interface ICarDriverServices
     {
-        public LeasDTO AddDriverToCar(int carId, int driverId);
+        public LeasDTO? AddDriverToCar(int carId, int driverId);
 
-        public List<Pair> GetById(int carId);
+        public List<Pair>? GetById(int carId);
 
         public List<LeasDTO> GetAllCarsWithDrivers();
 

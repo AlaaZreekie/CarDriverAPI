@@ -7,12 +7,9 @@ using System.Threading.Tasks;
 namespace Data.Entity
 {
     public class Driver : TEntity
-    {        
-        public  string Name { get; set; }
+    {
+        public string? Name { get; set; }
 
-        public ICollection<CarsDrivers> Leas { get; set; }
-
-
-        public Driver() { }
+        public ICollection<Leas> Leas { get; set; } = [];        
     }
 }

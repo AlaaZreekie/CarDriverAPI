@@ -10,12 +10,11 @@ namespace Core.DTO
     {
         public int Id {  get; set; }
         
-        public string type { get; set; }
-        public string color { get; set; }
-        public int doorsNum { get; set; }
+        public string? Type { get; set; }
+        public string? Color { get; set; }
+        public int? DoorsNum { get; set; }
 
-        public List<int> drivers { get; set; } = [];
+        public List<int> Drivers { get; set; } = [];
         
-        public CarDTO() { }
     }
 }
