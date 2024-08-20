@@ -38,7 +38,6 @@ public class CarDriverServices(ICarServices carService,IRepository<Car> carRepos
 
             return leas;
         }
-       
     }
     
     public List<Pair>? GetById(int carId)
