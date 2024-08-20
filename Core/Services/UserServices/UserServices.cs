@@ -5,13 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.DTO;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Core.Services.UserServices
 {
-    public class UserServices(UserManager<IdentityUser> userManeger)
+    public class UserServices(UserManager<IdentityUser> userManeger, IConfiguration configuration)
     {
+        private readonly IConfiguration _configuration = configuration;
         private readonly UserManager<IdentityUser> _userManeger = userManeger;
-        public async Task<UserDTO> LogIn(UserDTO u)
+        public async Task<String> LogIn(UserDTO u)
         {
             var user = await _userManeger.FindByEmailAsync(u.Email);
             if (user == null) { throw new Exception("User Not Found"); }
@@ -22,7 +27,26 @@ namespace Core.Services.UserServices
             {   
                 u.Name = user.UserName;
                 u.Password = "";
-                return u;
+                var claims = new List<Claim>();
+                var c1 = new Claim(JwtRegisteredClaimNames.Sub, value: _configuration["Jwt:Subject"]);
+                var c2 = new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString());
+                var c3 = new Claim("User", u.Name.ToString());
+                var c4 = new Claim("email", u.Email.ToString());
+                claims.Add(c1);
+                claims.Add(c2);
+                claims.Add(c3);
+                claims.Add(c4);
+                var Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                var sighIn = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256);
+                var token = new JwtSecurityToken(
+                    _configuration["Jwt:Issuer"],
+                    _configuration["Jwt:Audience"],
+                    claims,
+                    expires: DateTime.UtcNow.AddDays(1),
+                    signingCredentials: sighIn);
+                string tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
+
+                return tokenValue;
             }
 
         }

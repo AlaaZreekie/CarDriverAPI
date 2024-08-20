@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.DTO;
-
-public class LeasDTO
+namespace Core.DTO
 {
-    public int carId {  get; set; }
-    public string carName { get; set; }
-    public int driverId {  get; set; }        
-    public string driverName { get; set; }
+    public class LeasDTO
+    {
+        public int carId {  get; set; }
+        public string carName { get; set; }
+
+        public int driverId {  get; set; }
+        
+        public string driverName { get; set; }
+    }
 }
