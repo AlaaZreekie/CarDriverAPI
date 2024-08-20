@@ -26,11 +26,10 @@ public class DriverController(ICarDriverServices carDriverServices, IDriverServi
     [HttpGet]
     public IActionResult GetAllDrivers()
     {
-        var List = _driverServices.GetAllDrivers()
-                                  .ToList();
+        var List = _driverServices.GetAllDrivers();
         return List == null || List.Count == 0 ? BadRequest("There is no drivers") : Ok(List);
     }
-    [HttpPost, Authorize]
+    [HttpPost, Authorize]    
     public IActionResult CreateDriver([FromForm] string name)
     {
         var res = _driverServices.CreateDriver(name);
@@ -44,12 +43,14 @@ public class DriverController(ICarDriverServices carDriverServices, IDriverServi
 
     }
     [HttpDelete, Authorize]
+    //[HttpDelete]
     public IActionResult DeleteDriver([FromForm] int id)
     {
         var res = _driverServices.DeleteDriver(id);
         return res != null ? Ok("Done Deleting driver ") : BadRequest("This driver does not exist");
     }
     [HttpGet, Authorize]
+    //[HttpGet]
     public IActionResult GetDriversByCarId(int id)
     {
         var Drivers = _carDriverServices.GetById(id);
@@ -59,6 +60,7 @@ public class DriverController(ICarDriverServices carDriverServices, IDriverServi
         return Ok(Drivers);
     }
     [HttpPut, Authorize]
+    //[HttpPut]
     public IActionResult AddDriverToCar([FromForm] int carId, [FromForm] int driverId)
     {
         var car = _carServices.GetById(carId);

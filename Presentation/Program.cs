@@ -14,20 +14,22 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Core.Services.UserServices;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
     {
-        In = ParameterLocation.Header,
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
     });
+
+
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
-
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ICarServices, CarServices>();

@@ -27,19 +27,20 @@ public class CarController(ICarServices carServices, UserManager<IdentityUser> u
         return List == null || List.Count() == 0 ? BadRequest("There is no Cars") : Ok(List);
     }
     [HttpPost, Authorize()]
+    //[HttpPost]
     public IActionResult CreateCar([FromForm] string? color, [FromForm] string? type, [FromForm] int numDoor)
     {
         var res = _carServices.CreateCar(color, type, numDoor);
         return res != null ? Ok(res) : BadRequest("This car is already exist");
     }
-    [HttpPut, Authorize]
+    [HttpPut, Authorize()]
     public IActionResult UpdateCar([FromForm] int id, [FromForm] string? color, [FromForm] string? type, [FromForm] int numDoor)
     {
         var res = _carServices.UpdateCar(id, color, type, numDoor);
         return res != null ? Ok(res) : BadRequest("This car does not exist");
 
     }
-    [HttpDelete, Authorize]
+    [HttpDelete, Authorize()]
     public IActionResult DeleteCar([FromForm] int id)
     {
         var res = _carServices.DeleteCar(id);

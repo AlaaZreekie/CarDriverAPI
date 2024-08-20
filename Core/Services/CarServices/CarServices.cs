@@ -21,9 +21,9 @@ public class CarServices(/*UserManager<IdentityUser> userManeger,*/ IRepository<
 
     public List<CarDTO>? GetAllCars()
     {        
-        List<CarDTO> carsList = new List<CarDTO>();
+        List<CarDTO> carsList = new();
         
-        var cars = _carRepository.GetAll(c => c.Leas );
+        var cars = _carRepository.GetAll(c => c.Leas);
         if (cars == null || cars.Count() == 0) 
         {        
             return carsList;
