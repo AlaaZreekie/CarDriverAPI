@@ -12,7 +12,7 @@ namespace Data.Entity
         public string? CarType { get; set; }
         public int NumberOfDoors { get; set; }
 
-        public ICollection<Leas>? Leas { get; set; } 
+        public ICollection<CarDriver>? Leas { get; set; } 
         /*public Car()
         {
 

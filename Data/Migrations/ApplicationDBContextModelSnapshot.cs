@@ -44,6 +44,36 @@ namespace Data.Migrations
                     b.ToTable("Cars");
                 });
 
+            modelBuilder.Entity("Data.Entity.CarDriver", b =>
+                {
+                    b.Property<int>("CarId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DriverId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("CarId", "DriverId");
+
+                    b.HasIndex("DriverId");
+
+                    b.HasIndex("CarId", "StartDate", "EndDate")
+                        .IsUnique();
+
+                    b.ToTable("CarsDrivers");
+                });
+
             modelBuilder.Entity("Data.Entity.Driver", b =>
                 {
                     b.Property<int>("Id")
@@ -58,27 +88,6 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Drivers");
-                });
-
-            modelBuilder.Entity("Data.Entity.Leas", b =>
-                {
-                    b.Property<int>("CarId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("DriverId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.HasKey("CarId", "DriverId");
-
-                    b.HasIndex("DriverId");
-
-                    b.ToTable("CarsDrivers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -277,7 +286,7 @@ namespace Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Data.Entity.Leas", b =>
+            modelBuilder.Entity("Data.Entity.CarDriver", b =>
                 {
                     b.HasOne("Data.Entity.Car", "Car")
                         .WithMany("Leas")

@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -72,7 +72,7 @@ namespace Data.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -189,23 +189,25 @@ namespace Data.Migrations
                 name: "CarsDrivers",
                 columns: table => new
                 {
-                    carId = table.Column<int>(type: "integer", nullable: false),
-                    driverId = table.Column<int>(type: "integer", nullable: false),
+                    CarId = table.Column<int>(type: "integer", nullable: false),
+                    DriverId = table.Column<int>(type: "integer", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CarsDrivers", x => new { x.carId, x.driverId });
+                    table.PrimaryKey("PK_CarsDrivers", x => new { x.CarId, x.DriverId });
                     table.ForeignKey(
-                        name: "FK_CarsDrivers_Cars_carId",
-                        column: x => x.carId,
+                        name: "FK_CarsDrivers_Cars_CarId",
+                        column: x => x.CarId,
                         principalTable: "Cars",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CarsDrivers_Drivers_driverId",
-                        column: x => x.driverId,
+                        name: "FK_CarsDrivers_Drivers_DriverId",
+                        column: x => x.DriverId,
                         principalTable: "Drivers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -249,9 +251,9 @@ namespace Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CarsDrivers_driverId",
+                name: "IX_CarsDrivers_DriverId",
                 table: "CarsDrivers",
-                column: "driverId");
+                column: "DriverId");
         }
 
         /// <inheritdoc />

@@ -10,14 +10,14 @@ using Core.Services.DriverServices;
 
 namespace Core.Services.CarDriverServices;
 
-public class LeaseServices(ICarServices carService,IRepository<Car> carRepository, IRepository<Driver> driverRepository, IRepository<Leas> repository) : ILeaseServices
+public class LeaseServices(ICarServices carService,IRepository<Car> carRepository, IRepository<Driver> driverRepository, IRepository<CarDriver> repository) : ILeaseServices
 {
     private readonly ICarServices _carService = carService;
     private readonly IRepository<Car> _carRepository = carRepository;
     private readonly IRepository<Driver> _driverRepository = driverRepository;
     //private readonly IRepository<CarsDrivers> _carRepository = repository;
 
-    private readonly IRepository<Leas> _carsDriversRepository = repository;
+    private readonly IRepository<CarDriver> _carsDriversRepository = repository;
     public LeasDTO? AddDriverToCar(int carId, int driverId)
     {
         var car = new Car();
@@ -27,7 +27,7 @@ public class LeaseServices(ICarServices carService,IRepository<Car> carRepositor
         if(car == null  ||  driver == null) { return null; }
         else
         {
-            Leas carDriver = new() {CarId = car.Id,DriverId = driver.Id };
+            CarDriver carDriver = new() {CarId = car.Id,DriverId = driver.Id };
             var rescarDriver = _carsDriversRepository.Create(carDriver);
             LeasDTO leas = new LeasDTO();
             if(rescarDriver == null) { return null; }
@@ -64,7 +64,7 @@ public class LeaseServices(ICarServices carService,IRepository<Car> carRepositor
 
     public List<LeasDTO> GetAllLease()
     {
-        List<Leas> carsDrivers = [.. _carsDriversRepository.GetAll(c => c.Car, d => d.Driver)];
+        List<CarDriver> carsDrivers = [.. _carsDriversRepository.GetAll(c => c.Car, d => d.Driver)];
         List<LeasDTO> leas = [];
         if(carsDrivers == null) { return leas; }
 
@@ -75,7 +75,9 @@ public class LeaseServices(ICarServices carService,IRepository<Car> carRepositor
                 CarName = carsDrivers[i].Car.CarType,
                 DriverName = carsDrivers[i].Driver.Name,
                 CarId = carsDrivers[i].CarId,
-                DriverId = carsDrivers[i].DriverId
+                DriverId = carsDrivers[i].DriverId,
+                StartDate = carsDrivers[i].StartDate,
+                EndDate = carsDrivers[i].EndDate,                
             };
             leas.Add(l);
         }
@@ -92,7 +94,7 @@ public class LeaseServices(ICarServices carService,IRepository<Car> carRepositor
         if (car == null || driver == null) { throw new Exception("Wrong Details"); }
         else
         {
-            Leas carDriver = new() { CarId = car.Id, DriverId = driver.Id, StartDate = StartDate, EndDate = EndDate };
+            CarDriver carDriver = new() { CarId = car.Id, DriverId = driver.Id, StartDate = StartDate, EndDate = EndDate };
             var rescarDriver = _carsDriversRepository.Create(carDriver);
             var leasDTO = new LeasDTO();
             if (rescarDriver == null) { return null; }

@@ -11,12 +11,12 @@ using Microsoft.AspNetCore.Identity;
 namespace Core.Services;
 
 
-public class CarServices(/*UserManager<IdentityUser> userManeger,*/ IRepository<Car> carrepository, IRepository<Driver> driverRepository, IRepository<Leas> repository) : ICarServices   //CarServices   IRepository     Repository
+public class CarServices(/*UserManager<IdentityUser> userManeger,*/ IRepository<Car> carrepository, IRepository<Driver> driverRepository, IRepository<CarDriver> repository) : ICarServices   //CarServices   IRepository     Repository
 {
     //private readonly UserManager<IdentityUser> _userManeger = userManeger;
     private readonly IRepository<Car> _carRepository = carrepository;
     private readonly IRepository<Driver> _driverRepository = driverRepository;
-    private readonly IRepository<Leas> _repository = repository;
+    private readonly IRepository<CarDriver> _repository = repository;
 
 
     public List<CarDTO>? GetAllCars()
@@ -44,7 +44,7 @@ public class CarServices(/*UserManager<IdentityUser> userManeger,*/ IRepository<
             }
             else
             {
-                foreach (Leas cd in c.Leas)
+                foreach (CarDriver cd in c.Leas)
                 {                    
                     carDTO.Drivers.Add(cd.DriverId);
                 }            
@@ -62,7 +62,7 @@ public class CarServices(/*UserManager<IdentityUser> userManeger,*/ IRepository<
         carDTO = new() { Id = car.Id, Color = car.CarColor, Type = car.CarType, DoorsNum = car.NumberOfDoors, Drivers = [] };
 
 
-        foreach (Leas c in car.Leas)
+        foreach (CarDriver c in car.Leas)
         {
             var d = new Driver();
             //Driver d = _driverRepository.GetById(id);            

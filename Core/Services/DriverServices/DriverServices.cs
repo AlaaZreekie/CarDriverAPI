@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Core.Services.DriverServices;
 
-public class DriverServices(IRepository<Driver> driverRepository, IRepository<Car> carRepository, IRepository<Leas> repository) : IDriverServices
+public class DriverServices(IRepository<Driver> driverRepository, IRepository<Car> carRepository, IRepository<CarDriver> repository) : IDriverServices
 {
 
     private readonly IRepository<Car> _carRepository = carRepository;
     private readonly IRepository<Driver> _driverRepository = driverRepository;
-    private readonly IRepository<Leas> _repository = repository;
+    private readonly IRepository<CarDriver> _repository = repository;
 
 
     public List<DriverDTO>? GetAllDrivers()
@@ -34,7 +34,7 @@ public class DriverServices(IRepository<Driver> driverRepository, IRepository<Ca
             driverDTO.Name = d.Name;
             driverDTO.Cars = [];
 
-            foreach (Leas cd in d.Leas)
+            foreach (CarDriver cd in d.Leas)
             {
                 driverDTO.Cars.Add(cd.CarId);
             }
@@ -51,7 +51,7 @@ public class DriverServices(IRepository<Driver> driverRepository, IRepository<Ca
         if (driver.Leas == null || driver.Leas.Count() == 0) { return driverDTO; }
          driverDTO = new() { Id = driver.Id, Name = driver.Name, Cars = [] };
 
-        foreach (Leas d in driver.Leas)
+        foreach (CarDriver d in driver.Leas)
         {                       
             driverDTO.Cars.Add(d.CarId);
         }

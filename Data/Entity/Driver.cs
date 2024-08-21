@@ -10,6 +10,6 @@ namespace Data.Entity
     {
         public string? Name { get; set; }
 
-        public ICollection<Leas> Leas { get; set; } = [];        
+        public ICollection<CarDriver> Leas { get; set; } = [];        
     }
 }
