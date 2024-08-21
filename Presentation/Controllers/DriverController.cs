@@ -1,13 +1,7 @@
 ﻿using Core.Services.DriverServices;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Core.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Core.Services.CarDriverServices;
-using Core.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -28,19 +22,19 @@ public class DriverController(ILeaseServices carDriverServices, IDriverServices 
     public IActionResult GetAllDrivers()
     {
         var List = _driverServices.GetAllDrivers();
-        return List == null || List.Count == 0 ? BadRequest("There is no drivers") : Ok(List);
+        return List == null || List.Count == 0 ? BadRequest("There is no drivers") : Ok(Json(List));
     }
     [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]    
     public IActionResult CreateDriver([FromForm] string name)
     {
         var res = _driverServices.CreateDriver(name);
-        return res != null ? Ok(res) : BadRequest("This driver is already exist");
+        return res != null ? Ok(Json(res)) : BadRequest("This driver is already exist");
     }
     [HttpPut, Authorize]
     public IActionResult UpdateDriver([FromForm] int id, [FromForm] string name)
     {
         var res = _driverServices.UpdateDriver(id, name);
-        return res != null ? Ok(res) : BadRequest("This driver does not exist");
+        return res != null ? Ok(Json(res)) : BadRequest("This driver does not exist");
 
     }
     [HttpDelete, Authorize]
@@ -58,7 +52,7 @@ public class DriverController(ILeaseServices carDriverServices, IDriverServices 
         var car = _carServices.GetById(id);
         if (car == null) { return BadRequest("This car does not exist"); }
         if (Drivers == null || Drivers.Count() == 0) return NotFound("There is no Driver for this car");
-        return Ok(Drivers);
+        return Ok(Json(Drivers));
     }
     [HttpPut, Authorize]
     //[HttpPut]

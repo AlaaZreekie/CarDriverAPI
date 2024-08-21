@@ -1,11 +1,6 @@
 ﻿using Core.DTO;
 using Core.Services.UserServices;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Presentation.Controllers;
 
@@ -29,7 +24,7 @@ public class UserController(UserServices userServices, IConfiguration configurat
         UserDTO user = new() { Email = email, Password = passward, Name = name };
         var res = await _userServices.Register(user);
         if (res == null) { return BadRequest("Invalid email"); }
-        return Ok(res);
+        return Ok(Json(res));
     }
 
 }

@@ -15,7 +15,7 @@ public class LeasController(ILeaseServices services) : ControllerBase
     {
         //return Ok("done");
         var List = _services.GetAllLease().ToList();
-        return List == null || List.Count() == 0 ? BadRequest("There is no Leas") : Ok(List);
+        return List == null || List.Count() == 0 ? BadRequest("There is no Leas") : Ok((List));
     }
 
     [HttpPost]
@@ -23,6 +23,6 @@ public class LeasController(ILeaseServices services) : ControllerBase
     {        
         //return Ok("done");
         var CreatedLease = _services.CreateLease(carId, driverId, startDate, endDate);
-        return CreatedLease == null  ? BadRequest("ERROR") : Ok(CreatedLease);
+        return CreatedLease == null  ? BadRequest("ERROR") : Ok((CreatedLease));
     }
 }
