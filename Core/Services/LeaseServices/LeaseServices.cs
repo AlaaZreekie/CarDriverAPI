@@ -128,7 +128,7 @@ public class LeaseServices(ICarServices carService,IRepository<Car> carRepositor
             {
                 return false;
             }
-            if (l.CarId == carId && (endDate <= startDate || startDate <= l.EndDate || endDate <= l.StartDate))
+            if (l.CarId == carId && (endDate <= startDate || (startDate <= l.EndDate && startDate >= l.StartDate)||(endDate <= l.EndDate && endDate >= l.StartDate)))
             {
                 return false;
             }

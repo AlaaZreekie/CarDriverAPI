@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Data.Entity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 namespace Data.DBContext;
 
@@ -46,11 +47,17 @@ public class ApplicationDBContext : IdentityDbContext
             t.HasIndex(l => new { l.CarId, l.StartDate, l.EndDate })
              .IsUnique();
 
-           /* t.HasCheckConstraint("CK_NoOverlappingLeases",
-                "(SELECT * FROM \"CarsDrivers\" \"l2\" WHERE (\"l2\".\"CarId\" = \"CarId\") AND  (\"StartDate\" < \"l2\".\"EndDate\" AND \"EndDate\" > \"l2\".\"StartDate\"))");
-            */
 
-            
+            /* t.HasCheckConstraint("CK_NoOverlappingLeases",
+                 "(SELECT * FROM \"CarsDrivers\" \"l2\" WHERE (\"l2\".\"CarId\" = \"CarId\") AND  (\"StartDate\" < \"l2\".\"EndDate\" AND \"EndDate\" > \"l2\".\"StartDate\"))");
+             
+            t.HasCheckConstraint("CK_Lease_NoOverlap","NOT EXISTS (SELECT * FROM Leases l2 WHERE l2.CarId = CarId AND (StartDate =< l2.EndDate AND EndDate >= l2.StartDate))");
+
+                t.HasCheckConstraint("CK_Blog_TooFewBits", "Id > 1023");
+             
+             */
+
+
 
 
         });
