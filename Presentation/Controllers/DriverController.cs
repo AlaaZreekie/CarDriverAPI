@@ -17,11 +17,11 @@ namespace Presentation.Controllers;
 
 [ApiController]
 [Route("api/[controller]/[action]")]
-public class DriverController(ICarDriverServices carDriverServices, IDriverServices driverServices, ICarServices carServices) : Controller
+public class DriverController(ILeaseServices carDriverServices, IDriverServices driverServices, ICarServices carServices) : Controller
 {
     private readonly IDriverServices _driverServices = driverServices;
     private readonly ICarServices _carServices = carServices;
-    private ICarDriverServices _carDriverServices = carDriverServices;
+    private ILeaseServices _carDriverServices = carDriverServices;
 
 
     [HttpGet]

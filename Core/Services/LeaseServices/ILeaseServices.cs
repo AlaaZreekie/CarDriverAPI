@@ -8,13 +8,15 @@ using System.Threading.Tasks;
 
 namespace Core.Services.CarDriverServices
 {
-    public interface ICarDriverServices
+    public interface ILeaseServices
     {
         public LeasDTO? AddDriverToCar(int carId, int driverId);
 
         public List<Pair>? GetById(int carId);
 
-        public List<LeasDTO> GetAllCarsWithDrivers();
+        public List<LeasDTO> GetAllLease();
+
+        public LeasDTO? CreateLease(int carId, int driverId, DateTime StartDate, DateTime EndDate);
 
 
     }

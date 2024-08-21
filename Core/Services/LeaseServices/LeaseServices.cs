@@ -10,7 +10,7 @@ using Core.Services.DriverServices;
 
 namespace Core.Services.CarDriverServices;
 
-public class CarDriverServices(ICarServices carService,IRepository<Car> carRepository, IRepository<Driver> driverRepository, IRepository<Leas> repository) : ICarDriverServices
+public class LeaseServices(ICarServices carService,IRepository<Car> carRepository, IRepository<Driver> driverRepository, IRepository<Leas> repository) : ILeaseServices
 {
     private readonly ICarServices _carService = carService;
     private readonly IRepository<Car> _carRepository = carRepository;
@@ -62,7 +62,7 @@ public class CarDriverServices(ICarServices carService,IRepository<Car> carRepos
         return Drivers;       
     }
 
-    public List<LeasDTO> GetAllCarsWithDrivers()
+    public List<LeasDTO> GetAllLease()
     {
         List<Leas> carsDrivers = [.. _carsDriversRepository.GetAll(c => c.Car, d => d.Driver)];
         List<LeasDTO> leas = [];
@@ -81,5 +81,29 @@ public class CarDriverServices(ICarServices carService,IRepository<Car> carRepos
         }
 
         return leas;
+    }
+
+    public LeasDTO? CreateLease(int carId, int driverId, DateTime StartDate, DateTime EndDate)
+    {
+        var car = new Car();
+        car = _carRepository.GetById(carId);
+        var driver = new Driver();
+        driver = _driverRepository.GetById(driverId);
+        if (car == null || driver == null) { throw new Exception("Wrong Details"); }
+        else
+        {
+            Leas carDriver = new() { CarId = car.Id, DriverId = driver.Id, StartDate = StartDate, EndDate = EndDate };
+            var rescarDriver = _carsDriversRepository.Create(carDriver);
+            var leasDTO = new LeasDTO();
+            if (rescarDriver == null) { return null; }
+            leasDTO.CarName = rescarDriver.Car.CarType;
+            leasDTO.DriverName = rescarDriver.Driver.Name;
+            leasDTO.CarId = rescarDriver.CarId;
+            leasDTO.DriverId = rescarDriver.DriverId;
+            leasDTO.StartDate = rescarDriver.StartDate;
+            leasDTO.EndDate = rescarDriver.EndDate;
+            
+            return leasDTO;
+        }
     }
 }

@@ -7,9 +7,9 @@ namespace Presentation.Controllers;
 
 [ApiController]
 [Route("api/[controller]/[action]")]
-public class LeasController(ICarDriverServices services) : ControllerBase
+public class LeasController(ILeaseServices services) : ControllerBase
 {
-    private readonly ICarDriverServices _services = services;
+    private readonly ILeaseServices _services = services;
     [HttpGet]
     public IActionResult GetLeas()
     {

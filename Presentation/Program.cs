@@ -54,7 +54,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<ICarServices, CarServices>();
 builder.Services.AddScoped<IDriverServices, DriverServices>();
-builder.Services.AddScoped<ICarDriverServices, CarDriverServices>();
+builder.Services.AddScoped<ILeaseServices, LeaseServices>();
 builder.Services.AddScoped<UserServices>();
 
 builder.Services.AddScoped<IRepository<Car>,Repository<Car>>();

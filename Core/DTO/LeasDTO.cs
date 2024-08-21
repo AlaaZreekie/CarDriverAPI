@@ -10,9 +10,9 @@ namespace Core.DTO
     {
         public int CarId {  get; set; }
         public string? CarName { get; set; }
-
-        public int DriverId {  get; set; }
-        
+        public int DriverId {  get; set; }        
         public string? DriverName { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
     }
 }

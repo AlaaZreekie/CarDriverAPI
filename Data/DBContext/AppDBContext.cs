@@ -39,6 +39,11 @@ public class ApplicationDBContext : IdentityDbContext
             t.HasOne(d => d.Driver)
              .WithMany(cd => cd.Leas)
              .HasForeignKey(id => id.DriverId);
+            t.HasIndex(l => new { l.CarId, l.StartDate, l.EndDate })
+                  .IsUnique(); 
+            t.HasCheckConstraint("CK_Lease_NoOverlap",
+                "NOT EXISTS (SELECT 1 FROM Leases l2 WHERE l2.CarId = CarId AND " +
+                "(StartDate =< l2.EndDate AND EndDate >= l2.StartDate))");
 
 
         });
