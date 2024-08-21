@@ -118,9 +118,10 @@ public class LeaseServices(ICarServices carService,IRepository<Car> carRepositor
 
     public bool IsLeaseOverlapping(int carId, DateOnly startDate, DateOnly endDate)
     {
+        if ((endDate <= startDate)) {  return false; }
          var List =  _carsDriversRepository.GetAll();
         if(List == null) { return true; }
-        var leaseList = List.ToList();
+        var leaseList = List.ToList();        
         if (leaseList == null || leaseList.Count == 0) { return true; }
         foreach(CarDriver l in leaseList)
         {
@@ -128,7 +129,7 @@ public class LeaseServices(ICarServices carService,IRepository<Car> carRepositor
             {
                 return false;
             }
-            if (l.CarId == carId && (endDate <= startDate || (startDate <= l.EndDate && startDate >= l.StartDate)||(endDate <= l.EndDate && endDate >= l.StartDate)))
+            if (l.CarId == carId && ((startDate >= l.StartDate && startDate <= l.EndDate) || (endDate <= l.EndDate && endDate >= l.StartDate)))
             {
                 return false;
             }

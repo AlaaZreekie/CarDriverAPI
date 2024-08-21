@@ -57,9 +57,6 @@ public class ApplicationDBContext : IdentityDbContext
              
              */
 
-
-
-
         });
         base.OnModelCreating(modelBuilder);
     }
