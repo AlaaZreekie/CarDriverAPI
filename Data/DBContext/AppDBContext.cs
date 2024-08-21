@@ -23,6 +23,11 @@ public class ApplicationDBContext : IdentityDbContext
     {
         modelBuilder.Entity<Car>().Property(c => c.Id).ValueGeneratedOnAdd();
         modelBuilder.Entity<Car>().HasKey(c => c.Id);
+        //modelBuilder.Entity<Car>().HasCheckConstraint(" k", "");
+        /* modelBuilder.Entity<Car>(t =>
+         {
+            *//* t.HasCheckConstraint("CheckDorrs", "NumberOfDoors = 2 or NummberOfDoors = 4");*//*
+         });*/
 
         modelBuilder.Entity<Driver>().Property(d => d.Id).ValueGeneratedOnAdd();
         modelBuilder.Entity<Driver>().HasKey(d => d.Id);
@@ -30,8 +35,6 @@ public class ApplicationDBContext : IdentityDbContext
         modelBuilder.Entity<CarDriver>().Property(d => d.Id).ValueGeneratedOnAdd();
         modelBuilder.Entity<CarDriver>(t =>
         {
-            t.HasKey(cd => new { cd.CarId, cd.DriverId });
-
             t.HasOne(c => c.Car)
              .WithMany(cd => cd.Leas)
              .HasForeignKey(ic => ic.CarId);
@@ -42,6 +45,12 @@ public class ApplicationDBContext : IdentityDbContext
 
             t.HasIndex(l => new { l.CarId, l.StartDate, l.EndDate })
              .IsUnique();
+
+           /* t.HasCheckConstraint("CK_NoOverlappingLeases",
+                "(SELECT * FROM \"CarsDrivers\" \"l2\" WHERE (\"l2\".\"CarId\" = \"CarId\") AND  (\"StartDate\" < \"l2\".\"EndDate\" AND \"EndDate\" > \"l2\".\"StartDate\"))");
+            */
+
+            
 
 
         });

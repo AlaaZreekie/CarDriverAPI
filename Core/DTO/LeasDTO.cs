@@ -12,7 +12,7 @@ namespace Core.DTO
         public string? CarName { get; set; }
         public int DriverId {  get; set; }        
         public string? DriverName { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public DateOnly? StartDate { get; set; }
+        public DateOnly? EndDate { get; set; }
     }
 }

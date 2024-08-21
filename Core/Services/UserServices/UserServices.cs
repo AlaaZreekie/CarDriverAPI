@@ -69,7 +69,7 @@ namespace Core.Services.UserServices
             user.UserName = u.Name;
             //user.PasswordHash = _userManeger.AddPasswordAsync();
             var reult = await _userManeger.CreateAsync(user,u.Password);
-            return new UserDTO() { Email = u.Email };
+            return new UserDTO() {Name = u.Name, Email = u.Email };
         }
         /*public UserDTO ChangeRole()
         {

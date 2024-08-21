@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Services.DriverServices;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.Services.CarDriverServices;
 
@@ -85,27 +86,68 @@ public class LeaseServices(ICarServices carService,IRepository<Car> carRepositor
         return leas;
     }
 
-    public LeasDTO? CreateLease(int carId, int driverId, DateTime StartDate, DateTime EndDate)
+    public LeasDTO? CreateLease(int carId, int driverId, DateOnly StartDate, DateOnly EndDate)
     {
         var car = new Car();
         car = _carRepository.GetById(carId);
         var driver = new Driver();
         driver = _driverRepository.GetById(driverId);
+        var check = IsLeaseOverlapping(carId, StartDate, EndDate);
         if (car == null || driver == null) { throw new Exception("Wrong Details"); }
+        else if (!check) { throw new Exception("Wrong Details"); }
         else
         {
             CarDriver carDriver = new() { CarId = car.Id, DriverId = driver.Id, StartDate = StartDate, EndDate = EndDate };
             var rescarDriver = _carsDriversRepository.Create(carDriver);
             var leasDTO = new LeasDTO();
-            if (rescarDriver == null) { return null; }
-            leasDTO.CarName = rescarDriver.Car.CarType;
+            
+            if (rescarDriver == null || rescarDriver.StartDate == null|| rescarDriver.EndDate == null) { return null; }
+
+            else {leasDTO.CarName = rescarDriver.Car.CarType;
             leasDTO.DriverName = rescarDriver.Driver.Name;
             leasDTO.CarId = rescarDriver.CarId;
             leasDTO.DriverId = rescarDriver.DriverId;
             leasDTO.StartDate = rescarDriver.StartDate;
-            leasDTO.EndDate = rescarDriver.EndDate;
+            leasDTO.EndDate = rescarDriver.EndDate; 
+            }
+            
             
             return leasDTO;
         }
     }
+
+    public bool IsLeaseOverlapping(int carId, DateOnly startDate, DateOnly endDate)
+    {
+         var List =  _carsDriversRepository.GetAll();
+        if(List == null) { return true; }
+        var leaseList = List.ToList();
+        if (leaseList == null || leaseList.Count == 0) { return true; }
+        foreach(CarDriver l in leaseList)
+        {
+            if (l.CarId == carId && (l.StartDate == startDate || l.EndDate == endDate))
+            {
+                return false;
+            }
+            if (l.CarId == carId && (endDate <= startDate || startDate <= l.EndDate || endDate <= l.StartDate))
+            {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    /*public async Task<CarDriver> CreateLeaseAsync(LeasDTO lease)
+    {
+
+        if (await IsLeaseOverlapping(lease.CarId, lease.StartDate, lease.EndDate))
+        {
+            throw new InvalidOperationException("Lease period overlaps with an existing lease.");
+        }
+
+        _context.Leases.Add(lease);
+        await _context.SaveChangesAsync();
+
+        return lease;
+    }*/
 }

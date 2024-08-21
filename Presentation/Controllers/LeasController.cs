@@ -19,9 +19,10 @@ public class LeasController(ILeaseServices services) : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult CreateLeas(int carId, int driverId, DateTime startDate, DateTime endDate)
-    {        
-        //return Ok("done");
+    public IActionResult CreateLeas([FromForm] int carId, [FromForm] int driverId,int sYear, int sMonth, int sDay, int eYear, int eMonth, int eDay)
+    {
+        DateOnly startDate = new DateOnly(sYear, sMonth, sDay);
+        DateOnly endDate = new DateOnly(eYear, eMonth, eDay);
         var CreatedLease = _services.CreateLease(carId, driverId, startDate, endDate);
         return CreatedLease == null  ? BadRequest("ERROR") : Ok((CreatedLease));
     }

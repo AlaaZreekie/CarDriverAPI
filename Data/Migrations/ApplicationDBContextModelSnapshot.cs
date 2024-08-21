@@ -46,25 +46,25 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entity.CarDriver", b =>
                 {
-                    b.Property<int>("CarId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("DriverId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("StartDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<int>("CarId")
+                        .HasColumnType("integer");
 
-                    b.HasKey("CarId", "DriverId");
+                    b.Property<int>("DriverId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly?>("EndDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly?>("StartDate")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("DriverId");
 

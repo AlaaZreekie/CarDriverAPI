@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class o : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -189,16 +189,16 @@ namespace Data.Migrations
                 name: "CarsDrivers",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CarId = table.Column<int>(type: "integer", nullable: false),
                     DriverId = table.Column<int>(type: "integer", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    EndDate = table.Column<DateOnly>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CarsDrivers", x => new { x.CarId, x.DriverId });
+                    table.PrimaryKey("PK_CarsDrivers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CarsDrivers_Cars_CarId",
                         column: x => x.CarId,
@@ -248,6 +248,12 @@ namespace Data.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CarsDrivers_CarId_StartDate_EndDate",
+                table: "CarsDrivers",
+                columns: new[] { "CarId", "StartDate", "EndDate" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
