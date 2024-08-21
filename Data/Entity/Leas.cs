@@ -13,6 +13,8 @@ namespace Data.Entity
         public required int DriverId { get; set; }
         public Car? Car { get; set; }
         public Driver? Driver { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         
 
 
