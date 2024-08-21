@@ -68,12 +68,8 @@ namespace Core.Services.UserServices
             user.Email = u.Email;
             user.UserName = u.Name;
             //user.PasswordHash = _userManeger.AddPasswordAsync();
-            var reult = await _userManeger.CreateAsync(user,u.Password);
+            var reult =  _userManeger.CreateAsync(user,u.Password);
             return new UserDTO() {Name = u.Name, Email = u.Email };
         }
-        /*public UserDTO ChangeRole()
-        {
-            return null;
-        }*/
     }
 }
