@@ -14,6 +14,7 @@ namespace Data.Entity
         public Car? Car { get; set; }
         public Driver? Driver { get; set; }
         
+        
 
 
     }
