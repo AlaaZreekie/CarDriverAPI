@@ -72,7 +72,7 @@ public class CarServices(/*UserManager<IdentityUser> userManeger,*/ IRepository<
         return carDTO;
     }
 
-    public CarDTO? UpdateCar(int id,string? color, string? type, int numDoor)
+    public CarDTO? UpdateCar(int id,string? color, string? type, int? numDoor)
     {
         var car = _carRepository.GetById(id);
              

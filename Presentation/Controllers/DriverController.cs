@@ -4,6 +4,7 @@ using Core.Services;
 using Core.Services.CarDriverServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Core.DTO;
 
 
 
@@ -22,19 +23,19 @@ public class DriverController(ILeaseServices carDriverServices, IDriverServices 
     public IActionResult GetAllDrivers()
     {
         var List = _driverServices.GetAllDrivers();
-        return List == null || List.Count == 0 ? BadRequest("There is no drivers") : Ok(Json(List));
+        return List == null || List.Count == 0 ? BadRequest("There is no drivers") : Ok(List);
     }
     [HttpPost, Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]    
-    public IActionResult CreateDriver([FromForm] string name)
+    public IActionResult CreateDriver([FromForm]DriverDTO driver)
     {
-        var res = _driverServices.CreateDriver(name);
-        return res != null ? Ok(Json(res)) : BadRequest("This driver is already exist");
+        var res = _driverServices.CreateDriver(driver.Name);
+        return res != null ? Ok(res) : BadRequest("This driver is already exist");
     }
     [HttpPut, Authorize]
-    public IActionResult UpdateDriver([FromForm] int id, [FromForm] string name)
+    public IActionResult UpdateDriver([FromForm] DriverDTO driver)
     {
-        var res = _driverServices.UpdateDriver(id, name);
-        return res != null ? Ok(Json(res)) : BadRequest("This driver does not exist");
+        var res = _driverServices.UpdateDriver(driver.Id, driver.Name);
+        return res != null ? Ok(res) : BadRequest("This driver does not exist");
 
     }
     [HttpDelete, Authorize]
@@ -52,7 +53,7 @@ public class DriverController(ILeaseServices carDriverServices, IDriverServices 
         var car = _carServices.GetById(id);
         if (car == null) { return BadRequest("This car does not exist"); }
         if (Drivers == null || Drivers.Count() == 0) return NotFound("There is no Driver for this car");
-        return Ok(Json(Drivers));
+        return Ok(Drivers);
     }
     [HttpPut, Authorize]
     //[HttpPut]

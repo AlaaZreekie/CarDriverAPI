@@ -12,7 +12,7 @@ namespace Core.Services
         public List<CarDTO>? GetAllCars();
         public CarDTO? GetById(int id);
         public CarDTO? CreateCar(string? color, string? type, int? numDoor);
-        public CarDTO? UpdateCar(int id, string? color, string? type, int numDoor);
+        public CarDTO? UpdateCar(int id, string? color, string? type, int? numDoor);
         public CarDTO? DeleteCar(int id);      
 
 
