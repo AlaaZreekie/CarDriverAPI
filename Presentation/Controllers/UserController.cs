@@ -11,12 +11,12 @@ public class UserController(UserServices userServices, IConfiguration configurat
     private readonly UserServices _userServices = userServices;
     private readonly IConfiguration _configuration = configuration;
     [HttpPost]
-    public async Task<IActionResult> LogIn([FromForm] string email, [FromForm] string passward)
+    public async Task<IActionResult> LogIn([FromBody]UserDTO userDTO)
     {
-        UserDTO user = new() { Email = email, Password = passward };
-        var res = await _userServices.LogIn(user);
+        var res = await _userServices.LogIn(userDTO);
         if (res == null || string.IsNullOrEmpty(res)) { return BadRequest("ERROR"); }
-        else { return Ok(Json(res)); }
+        
+        else { return Ok(new TokenDTO { Token = res} ) ; }
     }
     [HttpPost]
     public async Task<IActionResult> Register([FromForm] string email, [FromForm] string passward, string name)
