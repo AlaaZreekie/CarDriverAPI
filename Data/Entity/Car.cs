@@ -10,7 +10,7 @@ namespace Data.Entity
         
         public string? CarColor { get; set; }
         public string? CarType { get; set; }
-        public int NumberOfDoors { get; set; }
+        public int? NumberOfDoors { get; set; }
 
         public ICollection<CarDriver>? Leas { get; set; } 
         /*public Car()

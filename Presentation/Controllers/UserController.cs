@@ -19,12 +19,11 @@ public class UserController(UserServices userServices, IConfiguration configurat
         else { return Ok(new TokenDTO { Token = res} ) ; }
     }
     [HttpPost]
-    public async Task<IActionResult> Register([FromForm] string email, [FromForm] string passward, string name)
-    {
-        UserDTO user = new() { Email = email, Password = passward, Name = name };
-        var res = await _userServices.Register(user);
+    public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
+    {        
+        var res = await _userServices.Register(userDTO);
         if (res == null) { return BadRequest("Invalid email"); }
-        return Ok(Json(res));
+        return Ok(res);
     }
 
 }

@@ -28,9 +28,9 @@ public class CarController(ICarServices carServices, UserManager<IdentityUser> u
     }
     [HttpPost, Authorize()]
     //[HttpPost]
-    public IActionResult CreateCar([FromForm] string? color, [FromForm] string? type, [FromForm] int numDoor)
+    public IActionResult CreateCar([FromBody] CarDTO car )
     {
-        var res = _carServices.CreateCar(color, type, numDoor);
+        var res = _carServices.CreateCar(car.Color, car.Type, car.DoorsNum);
         return res != null ? Ok(res) : BadRequest("This car is already exist");
     }
     [HttpPut, Authorize()]

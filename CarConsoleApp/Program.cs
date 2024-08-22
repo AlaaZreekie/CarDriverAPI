@@ -1,5 +1,6 @@
 ﻿using CarConsoleApp;
 using System;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Reflection.Metadata;
 using System.Text;
@@ -18,6 +19,7 @@ do
     Console.Write("Enter Your Choise : ");
     Choice = Console.ReadLine();
     Choice = Choice.ToLower();
+    bool doExit = false;
     switch (Choice)
     {
         case ("1"):
@@ -40,11 +42,13 @@ do
                 if (Response.IsSuccessStatusCode)
                 {
                     var Token = await Response.Content.ReadFromJsonAsync<TokenDTO>();
+                    if( Token.Token != null || Token.Token != "") { doExit =await Program(Token); }
+                    
                     Console.WriteLine(Token?.Token);
                 }
                 else
                 {
-                    Console.WriteLine("ERROR!");
+                    Console.WriteLine("ERROR...Enter Valid Email And Data!");
                 }
 
                 break;
@@ -65,21 +69,24 @@ do
 
                 var client = new HttpClient();
                 client.BaseAddress = new Uri("https://localhost:7140/api/User/");
-                var Json = JsonSerializer.Serialize(register;
+                var Json = JsonSerializer.Serialize(register);
                 var Content = new StringContent(Json, Encoding.UTF8, "application/json");
 
-                var Response = client.PostAsync("Register", Content).Result;
+                var Response = await client.PostAsync("Register", Content);
                 if (Response.IsSuccessStatusCode)
                 {
-                    /*var responseContent = Response.Content.ReadAsStringAsync().Result;
-                    var Token = JsonSerializer.Deserialize<string>(responseContent);
-                    Console.WriteLine(Token);*/
-                    var Token = await Response.Content.ReadFromJsonAsync<TokenDTO>();
-                    Console.WriteLine(Token?.Token);
+                    /*var responseContent =await Response.Content.ReadAsStringAsync();
+                    var user = JsonSerializer.Deserialize<User>(responseContent);*/
+                    var user = await Response.Content.ReadFromJsonAsync<User>();
+                    Console.WriteLine(user?.Name + " ===== " + user?.Email);
+                    Console.WriteLine("------------------------------------------");
+                    /*var user = await Response.Content.ReadFromJsonAsync<User>();
+                    Console.WriteLine(user?.Name);
+                    Console.WriteLine(user?.Email);*/
                 }
                 else
                 {
-                    Console.WriteLine("ERROR!");
+                    Console.WriteLine("ERROR...Enter Valid Email And Data!");
                 }
                 break;
             }
@@ -94,6 +101,133 @@ do
                 Console.WriteLine("ERROR...Enter Valid Choice.");
                 break;
             }
-    }
+
+       
+    } if(doExit) {Choice = "exit";}
 
 } while (Choice != "exit");
+
+
+async Task<bool> Program(TokenDTO token)
+{
+    Console.WriteLine("\n \n");
+   string choice;
+   do
+    {
+        Console.WriteLine("Enter 1 To Show All Cars.");
+        Console.WriteLine("Enter 2 To Create Car.");
+        Console.WriteLine("Enter 3 To Update Car.");
+        Console.WriteLine("Enter 4 To Delete Car");
+        Console.WriteLine("Enter Exit To Exit");
+        Console.Write("Enter Your Choise : ");
+        choice = Console.ReadLine();
+        choice.ToLower();
+        bool doExit = false;
+        switch (choice)
+        {
+            case ("1"):
+                {
+                    var client = new HttpClient();
+                    client.BaseAddress = new Uri("https://localhost:7140/api/Car/");
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
+
+                    var Response = await client.GetAsync("GetCars");
+                    if (Response.IsSuccessStatusCode)
+                    {
+
+                        /*var responseContent =await Response.Content.ReadAsStringAsync();
+                        var user = JsonSerializer.Deserialize<User>(responseContent);*/
+                        var user = await Response.Content.ReadFromJsonAsync<List<CarDTO>>();
+                        if (user == null || user.Count == 0) { Console.WriteLine("There are no cars..."); break; }
+                        foreach (CarDTO car in user)
+                        {
+
+                            Console.WriteLine();
+                            Console.WriteLine($"Id : {car.Id} , Type : {car.Type} , Color : {car.Color} , Number Of Doors : {car.DoorsNum}");
+                            Console.Write("Drivers : [ ");
+                            foreach (int driverId in car.Drivers)
+                            {
+                                Console.Write($"{driverId} , ");
+                            }
+                            Console.Write("]");
+                            Console.WriteLine("");
+                        }
+                        Console.WriteLine();
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        Console.WriteLine("ERROR...Enter Valid Email And Data!");
+                    }
+                    break;
+                }
+            case ("2"):
+                {
+                    string color;
+                    string type;
+                    int doorsNum;
+                    Console.WriteLine("Enterthe color ,type And number of doors.");
+                    Console.Write("Enter color : ");
+                    color = Console.ReadLine();
+                    Console.Write("Enter type : ");
+                    type = Console.ReadLine();
+                    
+                    do
+                    {
+                        Console.Write("Enter the  number of doors : ");
+                        doorsNum =Convert.ToInt32( Console.ReadLine());
+                        if(doorsNum == 2) { break; }
+                        if(doorsNum == 4) { break; }
+                    } while (doorsNum != 4 || doorsNum != 2);
+                    var car = new { Color = color,Type = type ,DoorsNum = doorsNum };
+
+                    var client = new HttpClient();
+                    client.BaseAddress = new Uri("https://localhost:7140/api/Car/");
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
+
+                    var Json = JsonSerializer.Serialize(car);
+                    var Content = new StringContent(Json, Encoding.UTF8, "application/json");
+                    var Response = await client.PostAsync("CreateCar", Content);
+                    if (Response.IsSuccessStatusCode)
+                    {
+                        /*var responseContent =await Response.Content.ReadAsStringAsync();
+                        var user = JsonSerializer.Deserialize<User>(responseContent);*/
+                        var user = await Response.Content.ReadFromJsonAsync<CarDTO>();
+                        Console.WriteLine(user?.Id + "  " + user?.Color +"  "+ user.Type + "  "+ user.DoorsNum + "  Is Created");
+                        Console.WriteLine("------------------------------------------");
+                        Console.WriteLine();
+                        Console.WriteLine();
+
+                        /*var user = await Response.Content.ReadFromJsonAsync<User>();
+                        Console.WriteLine(user?.Name);
+                        Console.WriteLine(user?.Email);*/
+                    }
+                    else
+                    {
+                        Console.WriteLine("ERROR...Enter Valid Email And Data!");
+                    }
+                    break;
+                }
+            case ("exit"):
+                {
+                    Console.WriteLine("---" + Choice + "ing---");
+                    Console.WriteLine("---End Of Program ---");
+                    break;
+                }
+            default:
+                {
+                    Console.WriteLine("ERROR...Enter Valid Choice.");
+                    break;
+                }
+
+
+        }
+        if (doExit) { choice = "exit"; }
+
+    } while (choice != "exit");
+
+
+
+
+    return true;
+}

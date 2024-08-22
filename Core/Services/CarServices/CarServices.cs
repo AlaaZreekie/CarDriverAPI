@@ -118,7 +118,7 @@ public class CarServices(/*UserManager<IdentityUser> userManeger,*/ IRepository<
     }
 
     
-    public CarDTO? CreateCar(string? color, string? type, int numDoor)
+    public CarDTO? CreateCar(string? color, string? type, int? numDoor)
     {
         var car = new Car()
         {
