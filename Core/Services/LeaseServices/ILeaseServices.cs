@@ -16,7 +16,7 @@ namespace Core.Services.CarDriverServices
 
         public List<LeasDTO> GetAllLease();
 
-        public LeasDTO? CreateLease(int carId, int driverId, DateOnly StartDate, DateOnly EndDate);
+        public LeasDTO? CreateLease(LeasDTO leas);
 
 
     }

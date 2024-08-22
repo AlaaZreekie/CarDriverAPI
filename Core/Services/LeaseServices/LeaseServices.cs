@@ -77,27 +77,28 @@ public class LeaseServices(ICarServices carService,IRepository<Car> carRepositor
                 DriverName = carsDrivers[i].Driver.Name,
                 CarId = carsDrivers[i].CarId,
                 DriverId = carsDrivers[i].DriverId,
-                StartDate = carsDrivers[i].StartDate,
-                EndDate = carsDrivers[i].EndDate,                
+                               
             };
+            if (carsDrivers[i].StartDate != null) { l.StartDate = carsDrivers[i].StartDate; };
+            if (carsDrivers[i].EndDate != null) { l.EndDate = carsDrivers[i].EndDate; };
             leas.Add(l);
         }
 
         return leas;
     }
 
-    public LeasDTO? CreateLease(int carId, int driverId, DateOnly StartDate, DateOnly EndDate)
+    public LeasDTO? CreateLease(LeasDTO leas)
     {
         var car = new Car();
-        car = _carRepository.GetById(carId);
+        car = _carRepository.GetById(leas.CarId);
         var driver = new Driver();
-        driver = _driverRepository.GetById(driverId);
-        var check = IsLeaseOverlapping(carId, StartDate, EndDate);
+        driver = _driverRepository.GetById(leas.DriverId);
+        var check = IsLeaseOverlapping(leas.CarId,leas.StartDate, leas.EndDate);
         if (car == null || driver == null) { throw new Exception("Wrong Details"); }
         else if (!check) { throw new Exception("Wrong Details"); }
         else
         {
-            CarDriver carDriver = new() { CarId = car.Id, DriverId = driver.Id, StartDate = StartDate, EndDate = EndDate };
+            CarDriver carDriver = new() { CarId = car.Id, DriverId = driver.Id, StartDate = leas.StartDate, EndDate = leas.EndDate };
             var rescarDriver = _carsDriversRepository.Create(carDriver);
             var leasDTO = new LeasDTO();
             
@@ -116,7 +117,7 @@ public class LeaseServices(ICarServices carService,IRepository<Car> carRepositor
         }
     }
 
-    public bool IsLeaseOverlapping(int carId, DateOnly startDate, DateOnly endDate)
+    public bool IsLeaseOverlapping(int carId, DateOnly? startDate, DateOnly? endDate)
     {
         if ((endDate <= startDate)) {  return false; }
          var List =  _carsDriversRepository.GetAll();

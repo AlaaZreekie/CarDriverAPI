@@ -437,16 +437,41 @@ async Task<bool> Program(TokenDTO token)
                 {
                     int carId;
                     int driverId;
+                    int sDay, sMonth, sYear;
+                    int eDay, eMonth, eYear;
+                    DateOnly startDate;
+                    DateOnly endDate;
                     Console.WriteLine("Enter the car id, driver id, startdate and endDate.");
                     Console.Write("Enter car id : ");
                     carId =Convert.ToInt32( Console.ReadLine());
-                    Console.Write("Enter type : ");
+                    Console.Write("Enter driver id : ");
                     driverId = Convert.ToInt32(Console.ReadLine());
 
-                    var leas = new { CarId = carId };
+
+                    do
+                    {
+                        Console.Write("Enter Satrt day : ");
+                        sDay = Convert.ToInt32(Console.ReadLine());
+                        Console.Write("Enter Satrt month : ");
+                        sMonth = Convert.ToInt32(Console.ReadLine());
+                        Console.Write("Enter Satrt year : ");
+                        sYear = Convert.ToInt32(Console.ReadLine());
+                        Console.Write("Enter End day : ");
+                        eDay = Convert.ToInt32(Console.ReadLine());
+                        Console.Write("Enter End month : ");
+                        eMonth = Convert.ToInt32(Console.ReadLine());
+                        Console.Write("Enter End year : ");
+                        eYear = Convert.ToInt32(Console.ReadLine());
+                        startDate = new DateOnly(sYear, sMonth, sDay);
+                        endDate = new DateOnly(eYear, eMonth, eDay);
+                        Console.WriteLine("\n\n");
+
+                    } while (startDate >= endDate);
+
+                    var leas = new { CarId = carId, DriverId = driverId, StartDate = startDate, EndDate = endDate };
 
                     var client = new HttpClient();
-                    client.BaseAddress = new Uri("https://localhost:7140/api/Car/");
+                    client.BaseAddress = new Uri("https://localhost:7140/api/Leas/");
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
 
                     var Json = JsonSerializer.Serialize(leas);

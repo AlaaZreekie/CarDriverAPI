@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -59,7 +59,7 @@ namespace Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CarColor = table.Column<string>(type: "text", nullable: true),
                     CarType = table.Column<string>(type: "text", nullable: true),
-                    NumberOfDoors = table.Column<int>(type: "integer", nullable: false)
+                    NumberOfDoors = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
